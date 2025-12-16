@@ -18,6 +18,20 @@ pipeline {
                 sh 'mvn clean compile'
             }
         }
+        stage('MVN SONARQUBE') {
+    steps {
+        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('SonarQube') {
+                sh '''
+                mvn clean verify sonar:sonar \
+                -Dsonar.projectKey=student-management \
+                -Dsonar.login=$SONAR_TOKEN
+                '''
+            }
+        }
+    }
+}
+
     }
 }
 
